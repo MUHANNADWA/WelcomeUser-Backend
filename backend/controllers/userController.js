@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import asyncHandler from "../middleware/asyncHandler.js";
-import generateToken from "../utils/generateToken.js";
+// import generateToken from "../utils/generateToken.js";
 
 // @desc    Auth user & get token
 // @route   POST /users/login
@@ -11,13 +11,13 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    generateToken(res, user._id);
+    // generateToken(res, user._id);
 
     res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      isAdmin: user.isAdmin,
+      profileColor: user.profileColor,
     });
   } else {
     res.status(401);
@@ -45,13 +45,13 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    generateToken(res, user._id);
+    // generateToken(res, user._id);
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      isAdmin: user.isAdmin,
+      profileColor: user.profileColor,
     });
   } else {
     res.status(400);
@@ -81,7 +81,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      isAdmin: user.isAdmin,
+      profileColor: user.profileColor,
     });
   } else {
     res.status(404);
@@ -109,7 +109,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
+      profileColor: updatedUser.profileColor,
     });
   } else {
     res.status(404);
@@ -172,7 +172,7 @@ const updateUser = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    user.isAdmin = Boolean(req.body.isAdmin);
+    user.profileColor = req.body.profileColor || user.profileColor;
 
     const updatedUser = await user.save();
 
@@ -180,7 +180,7 @@ const updateUser = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
+      profileColor: updatedUser.profileColor,
     });
   } else {
     res.status(404);
